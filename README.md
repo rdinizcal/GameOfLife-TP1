@@ -1,4 +1,4 @@
-# Universidade de Brasília - Técnicas de Programação 1 - 2017/01
+## Universidade de Brasília - Técnicas de Programação 1 - 2017/01
 
 ## Componentes 
 - David Silva
@@ -11,7 +11,7 @@
 * Instale o Git no seu computador
 * Clone o repositório para o seu computador:
 ```
-git clone https://github.com/hugohonda/android_app_UnBSolidaria.git
+git clone https://github.com/rdinizcal/GameOfLife-TP1.git
 ```
 
 Trabalhando com Branches:
