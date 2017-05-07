@@ -2,6 +2,7 @@ package br.unb.cic.poo.gol
 
 import scala.io.StdIn.readInt
 import scala.io.StdIn.readLine
+import br.unb.cic.poo.gol.controller.GameController
 
 /**
  * Representa o componente View do GoL
