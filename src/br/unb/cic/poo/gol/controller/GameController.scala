@@ -1,4 +1,8 @@
-package br.unb.cic.poo.gol
+package br.unb.cic.poo.gol.controller
+
+import br.unb.cic.poo.gol.model.Statistics
+import br.unb.cic.poo.gol.GameView
+import br.unb.cic.poo.gol.model.ConwayEngine
 
 /**
  * Relaciona o componente View com o componente Model. 
@@ -6,6 +10,8 @@ package br.unb.cic.poo.gol
  * @author Breno Xavier (baseado na implementacao Java de rbonifacio@unb.br
  */
 object GameController {
+  
+  val engine = new ConwayEngine();
   
   def start {
     GameView.update
@@ -20,7 +26,7 @@ object GameController {
 
   def makeCellAlive(i: Int, j: Int) {
     try {
-			GameEngine.makeCellAlive(i, j)
+			engine.makeCellAlive(i, j)
 			GameView.update
 		}
 		catch {
@@ -31,8 +37,13 @@ object GameController {
   }
   
   def nextGeneration {
-    GameEngine.nextGeneration
+    engine.nextGeneration
     GameView.update
   }
   
+  def getHeight : Int = engine.height;
+  
+  def getWidth : Int = engine.width;
+  
+  def isCellAlive (i : Int, j : Int) : Boolean = engine.isCellAlive(i, j);
 }

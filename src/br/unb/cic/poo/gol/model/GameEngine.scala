@@ -1,15 +1,15 @@
-package br.unb.cic.poo.gol
+package br.unb.cic.poo.gol.model
 
 import scala.collection.mutable.ListBuffer
-import scala.util.control.TailCalls.TailRec
-import scala.annotation.tailrec
+import br.unb.cic.poo.gol.Main
 
 /**
  * Representa a Game Engine do GoL 
  * 
- * @author Breno Xavier (baseado na implementacao Java de rbonifacio@unb.br
+ * Codigo refatorado do @author Breno Xavier para implementacao
+ * de padrao de design TemplateMethod
  */
-object GameEngine {
+abstract class GameEngine {
   
   val height = Main.height
   val width = Main.width
@@ -25,16 +25,8 @@ object GameEngine {
 
 
   /**
-	 * Calcula uma nova geracao do ambiente. Essa implementacao utiliza o
-	 * algoritmo do Conway, ou seja:
-	 * 
-	 * a) uma celula morta com exatamente tres celulas vizinhas vivas se torna
-	 * uma celula viva.
-	 * 
-	 * b) uma celula viva com duas ou tres celulas vizinhas vivas permanece
-	 * viva.
-	 * 
-	 * c) em todos os outros casos a celula morre ou continua morta.
+	 * Calcula uma nova geracao do ambiente. Dada a regra implementada com os
+	 * metodos shouldRevive e shouldKeepAlive
 	 */
   
   def nextGeneration {
@@ -71,7 +63,7 @@ object GameEngine {
   /*
 	 * Verifica se uma posicao (a, b) referencia uma celula valida no tabuleiro.
 	 */
-  private def validPosition(i: Int, j: Int) = 
+  def validPosition(i: Int, j: Int) = 
     i >= 0 && i < height && j >= 0 && j < width;
   
   
@@ -130,32 +122,9 @@ object GameEngine {
   
   
   /* verifica se uma celula deve ser mantida viva */
-  private def shouldKeepAlive(i: Int, j: Int): Boolean = {
-    (cells(i)(j).isAlive) &&
-      (numberOfNeighborhoodAliveCells(i, j) == 2 || numberOfNeighborhoodAliveCells(i, j) == 3)
-  }
+  def shouldKeepAlive(i: Int, j: Int): Boolean;
   
   /* verifica se uma celula deve (re)nascer */
-  private def shouldRevive(i: Int, j: Int): Boolean = {
-    (!cells(i)(j).isAlive) && 
-      (numberOfNeighborhoodAliveCells(i, j) == 3)
-  }
-
-  
-  /*
-	 * Computa o numero de celulas vizinhas vivas, dada uma posicao no ambiente
-	 * de referencia identificada pelos argumentos (i,j).
-	 */
-  private def numberOfNeighborhoodAliveCells(i: Int, j: Int): Int = {
-    var alive = 0
-    for(a <- (i - 1 to i + 1)) {
-      for(b <- (j - 1 to j + 1)) {
-        if (validPosition(a, b)  && (!(a==i && b == j)) && cells(a)(b).isAlive) {
-					alive += 1
-				}
-      }
-    }
-    alive
-  }
+  def shouldRevive(i: Int, j: Int): Boolean;
 
 }
