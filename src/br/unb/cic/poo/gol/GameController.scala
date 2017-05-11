@@ -1,14 +1,5 @@
-package br.unb.cic.poo.gol.controller
+package br.unb.cic.poo.gol
 
-import br.unb.cic.poo.gol.model.Statistics
-import br.unb.cic.poo.gol.GameView
-import br.unb.cic.poo.gol.model.ConwayEngine
-
-/**
- * Relaciona o componente View com o componente Model. 
- * 
- * @author Breno Xavier (baseado na implementacao Java de rbonifacio@unb.br
- */
 object GameController {
   
   val engine = new ConwayEngine();

@@ -1,4 +1,4 @@
-package br.unb.cic.poo.gol.model
+package br.unb.cic.poo.gol
 
 class ConwayEngine extends GameEngine {
   
@@ -13,7 +13,7 @@ class ConwayEngine extends GameEngine {
       (numberOfNeighborhoodAliveCells(i, j) == 3)
   }
   
-   /*
+  /*
 	 * Computa o numero de celulas vizinhas vivas, dada uma posicao no ambiente
 	 * de referencia identificada pelos argumentos (i,j).
 	 */

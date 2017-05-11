@@ -1,7 +1,6 @@
 package br.unb.cic.poo.gol
 
 import scala.collection.mutable.ListBuffer
-import br.unb.cic.poo.gol.controller.GameController
 
 /**
  * Programa principal do GoL.

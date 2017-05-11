@@ -1,4 +1,4 @@
-package br.unb.cic.poo.gol.model
+package br.unb.cic.poo.gol
 
 /**
  * Rerepsentacao de uma celula do GoL 

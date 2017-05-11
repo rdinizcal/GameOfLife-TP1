@@ -1,14 +1,7 @@
-package br.unb.cic.poo.gol.model
+package br.unb.cic.poo.gol
 
 import scala.collection.mutable.ListBuffer
-import br.unb.cic.poo.gol.Main
 
-/**
- * Representa a Game Engine do GoL 
- * 
- * Codigo refatorado do @author Breno Xavier para implementacao
- * de padrao de design TemplateMethod
- */
 abstract class GameEngine {
   
   val height = Main.height
