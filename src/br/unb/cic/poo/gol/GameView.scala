@@ -14,11 +14,30 @@ object GameView {
 	private final val HALT = 3
 	
   
-  
+  /**
+   * Define as regras do jogo
+   */
+	def setup {
+	  
+	  if(GameEngine.ruleList.length == 0){
+	    println("Não há regras disponíveis")
+	    return
+	  }
+	  	  
+	  println("Regras disponíveis:")
+	  for(i <- (0 until GameEngine.ruleList.length)) {
+	    println( "["+i+"] " + GameEngine.ruleList.get(i).get.toString )
+	  }
+	  print("\nQual regra será utilizada no jogo?")
+	  
+	  var option = readLine().toInt
+	  
+	  GameEngine.setRule(option)
+	}
   
   /**
 	 * Atualiza o componente view (representado pela classe GameBoard),
-	 * possivelmente como uma resposta a uma atualiza��o do jogo.
+	 * possivelmente como uma resposta a uma atualizacao do jogo.
 	 */
 	def update {
 		printFirstRow
@@ -40,7 +59,7 @@ object GameView {
 	  println("\n\n")
 	  
 	  do{
-	    println("Rule: "+GameEngine.rule.toString)
+	    println("Rule: "+GameEngine.rule)
 	    println("Select one of the options: \n \n"); 
 			println("[1] Make a cell alive");
 			println("[2] Next generation");

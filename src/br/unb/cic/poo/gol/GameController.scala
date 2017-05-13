@@ -8,6 +8,7 @@ package br.unb.cic.poo.gol
 object GameController {
   
   def start {
+    GameView.setup
     GameView.update
   }
   

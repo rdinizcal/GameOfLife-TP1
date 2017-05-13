@@ -5,22 +5,28 @@ import scala.util.control.TailCalls.TailRec
 import scala.annotation.tailrec
 import com.google.inject.Guice
 import com.google.inject.Inject
+import scala.collection.mutable.MutableList
 
 
 object GameEngine {
   
   val injector = Guice.createInjector(new RuleModule)
-  val rule : Rule = injector.getInstance(classOf[RuleComponent]).getRule()
-   
+  val ruleList = injector.getInstance(classOf[RuleComponent]).getRuleList()
+  var rule : Rule = null
+    
   val height = Main.height
   val width = Main.width
 
   val cells = Array.ofDim[Cell](height, width)
-
+  
   for (i <- (0 until height)) {
     for (j <- (0 until width)) {
       cells(i)(j) = new Cell
     }
+  }
+  
+  def setRule (index : Int) {
+    rule = ruleList.get(index).get
   }
   
   /*

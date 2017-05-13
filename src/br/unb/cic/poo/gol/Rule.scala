@@ -15,7 +15,7 @@ trait Rule {
   /**
    * Define o nome da regra
    */
-  def toString() : String;
+  override def toString() : String;
   
   /**
 	 * Verifica se uma posicao (i, j) referencia uma celula valida no tabuleiro.
