@@ -11,7 +11,12 @@ trait Rule {
    * Define se a cell(i,j) deve reviver
    */
   def shouldRevive(i: Int, j: Int): Boolean;
- 
+  
+  /**
+   * Define o nome da regra
+   */
+  def toString() : String;
+  
   /**
 	 * Verifica se uma posicao (i, j) referencia uma celula valida no tabuleiro.
 	 */

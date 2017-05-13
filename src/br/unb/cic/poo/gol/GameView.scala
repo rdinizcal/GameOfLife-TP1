@@ -2,11 +2,6 @@ package br.unb.cic.poo.gol
 
 import scala.io.StdIn.{readInt, readLine}
 
-/**
- * Representa o componente View do GoL
- * 
- * @author Breno Xavier (baseado na implementacao Java de rbonifacio@unb.br
- */
 object GameView {
   
 	private final val LINE = "+-----+"
@@ -45,6 +40,7 @@ object GameView {
 	  println("\n\n")
 	  
 	  do{
+	    println("Rule: "+GameEngine.rule.toString)
 	    println("Select one of the options: \n \n"); 
 			println("[1] Make a cell alive");
 			println("[2] Next generation");

@@ -3,16 +3,15 @@ package br.unb.cic.poo.gol
 import scala.collection.mutable.ListBuffer
 import scala.util.control.TailCalls.TailRec
 import scala.annotation.tailrec
+import com.google.inject.Guice
+import com.google.inject.Inject
 
-/**
- * Representa a Game Engine do GoL
- *
- * @author Breno Xavier (baseado na implementacao Java de rbonifacio@unb.br
- */
+
 object GameEngine {
-
-  val rule: Rule = new ConwayRule
-
+  
+  val injector = Guice.createInjector(new RuleModule)
+  val rule : Rule = injector.getInstance(classOf[RuleComponent]).getRule()
+   
   val height = Main.height
   val width = Main.width
 
