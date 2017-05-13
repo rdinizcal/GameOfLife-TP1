@@ -19,14 +19,14 @@ object GameView {
    */
 	def setup {
 	  
-	  if(GameEngine.ruleList.length == 0){
+	 if(GameEngine.rules.length == 0){
 	    println("Não há regras disponíveis")
 	    return
 	  }
 	  	  
 	  println("Regras disponíveis:")
-	  for(i <- (0 until GameEngine.ruleList.length)) {
-	    println( "["+i+"] " + GameEngine.ruleList.get(i).get.toString )
+	  for(i <- (0 until GameEngine.rules.length)) {
+	    println( "["+i+"] " + GameEngine.rules.apply(i).toString() )
 	  }
 	  print("\nQual regra será utilizada no jogo?")
 	  

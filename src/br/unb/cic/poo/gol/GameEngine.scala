@@ -1,17 +1,15 @@
 package br.unb.cic.poo.gol
 
 import scala.collection.mutable.ListBuffer
-import scala.util.control.TailCalls.TailRec
-import scala.annotation.tailrec
-import com.google.inject.Guice
-import com.google.inject.Inject
 import scala.collection.mutable.MutableList
+
+import com.google.inject.Guice
 
 
 object GameEngine {
   
   val injector = Guice.createInjector(new RuleModule)
-  val ruleList = injector.getInstance(classOf[RuleComponent]).getRuleList()
+  val rules = injector.getInstance(classOf[RuleComponent]).getRules().toSeq
   var rule : Rule = null
     
   val height = Main.height
@@ -26,7 +24,7 @@ object GameEngine {
   }
   
   def setRule (index : Int) {
-    rule = ruleList.get(index).get
+    rule = rules.apply(index)
   }
   
   /*

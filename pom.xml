@@ -5,9 +5,9 @@
   <version>0.0.1-SNAPSHOT</version>
   <dependencies>
 	<dependency>
-    	<groupId>com.google.inject</groupId>
-    	<artifactId>guice</artifactId>
-    	<version>4.0</version>
+    	<groupId>net.codingwell</groupId>
+    	<artifactId>scala-guice_2.11</artifactId>
+    	<version>4.1.0</version>
 	</dependency>
   </dependencies>
   <build>
