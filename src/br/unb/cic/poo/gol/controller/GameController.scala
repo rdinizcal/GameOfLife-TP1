@@ -54,6 +54,14 @@ object GameController {
 		}
   }
   
+  def clearBoard{
+    for (i <- (0 until game.height)) {
+      for (j <- (0 until game.width)) {
+        makeCellDead(i, j)
+      }
+    }
+  }
+  
   def nextGeneration {
     game.nextGeneration
   }

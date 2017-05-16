@@ -112,7 +112,9 @@ class GameEngine extends Game{
   def makeCellDead(y: Int, x: Int) = {
     if (rule.validPosition(y, x)) {
       cells(y)(x).kill
-      Statistics.removeRevive
+      if(cells(y)(x).isAlive){
+        Statistics.removeRevive
+      }
     } else {
       throw new IllegalArgumentException
     }

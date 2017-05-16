@@ -15,7 +15,7 @@ import com.badlogic.gdx.Input
 class GameView ( var game : GameEngine) extends Screen {
   
 	
-	var aliveTexture, deadTexture, selectorTexture, selectAliveTexture, selectDeadTexture, backgroundTexture, undoTexture, selectUndoTexture, nextgenTexture, selectNextgenTexture: Texture = _
+	var aliveTexture, deadTexture, selectorTexture, selectAliveTexture, selectDeadTexture, backgroundTexture, undoTexture, selectUndoTexture, nextgenTexture, selectNextgenTexture, clearTexture, selectClearTexture: Texture = _
   var aliveSprite, deadSprite, selectAliveSprite, selectDeadSprite : Sprite = _
   var i, j, x, y: Int = _ 
    
@@ -63,6 +63,9 @@ class GameView ( var game : GameEngine) extends Screen {
      nextgenTexture = new Texture("NextGen.png")
      selectNextgenTexture = new Texture("SelectedNextGen.png")
      
+     clearTexture = new Texture("Clear.png")
+     selectClearTexture = new Texture("SelectedClear.png")
+     
      undoTexture = new Texture("Undo.png")
      selectUndoTexture = new Texture("SelectedUndo.png")
      
@@ -108,6 +111,15 @@ class GameView ( var game : GameEngine) extends Screen {
 		 game.batch.draw(nextgenTexture, 1220, 700)
 		}
 		
+		if(Gdx.input.getX() >= 1220 && Gdx.input.getX() <= 1220 + clearTexture.getWidth() && (Gdx.graphics.getHeight() - Gdx.input.getY()) >= 630 && (Gdx.graphics.getHeight() - Gdx.input.getY()) <= 630 + clearTexture.getHeight()){
+		 game.batch.draw(selectClearTexture, 1220, 630)
+		 if(Gdx.input.justTouched()){
+		   GameController.clearBoard
+		 }
+		}else{
+		 game.batch.draw(clearTexture, 1220, 630)
+		}
+		
 		if(Gdx.input.getX() >= 1200 && Gdx.input.getX() <= 1200 + undoTexture.getWidth() && (Gdx.graphics.getHeight() - Gdx.input.getY()) >= 374 && (Gdx.graphics.getHeight() - Gdx.input.getY()) <= 374 + undoTexture.getHeight()){
 		 game.batch.draw(selectUndoTexture, 1200, 374)
 		}else{
@@ -150,9 +162,12 @@ class GameView ( var game : GameEngine) extends Screen {
 		 }
 		
 		
-		//implementação rapida para teste de nextgeneration e halt
+		//implementação rapida para teste de nextgeneration e clear
 		if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
 		  GameController.nextGeneration
+		}
+		if(Gdx.input.isKeyJustPressed(Input.Keys.C)){
+		  GameController.clearBoard
 		}
   	game.batch.end();
   	
