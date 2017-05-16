@@ -15,7 +15,7 @@ import com.badlogic.gdx.Input
 class GameView ( var game : GameEngine) extends Screen {
   
 	
-	var aliveTexture, deadTexture, selectorTexture, selectAliveTexture, selectDeadTexture, backgroundTexture: Texture = _
+	var aliveTexture, deadTexture, selectorTexture, selectAliveTexture, selectDeadTexture, backgroundTexture, undoTexture, selectUndoTexture, nextgenTexture, selectNextgenTexture: Texture = _
   var aliveSprite, deadSprite, selectAliveSprite, selectDeadSprite : Sprite = _
   var i, j, x, y: Int = _ 
    
@@ -60,6 +60,12 @@ class GameView ( var game : GameEngine) extends Screen {
     
      backgroundTexture = new Texture("GameBackground.png")
      
+     nextgenTexture = new Texture("NextGen.png")
+     selectNextgenTexture = new Texture("SelectedNextGen.png")
+     
+     undoTexture = new Texture("Undo.png")
+     selectUndoTexture = new Texture("SelectedUndo.png")
+     
      aliveTexture = new Texture("AliveCell.png")
      aliveSprite = new Sprite(aliveTexture)
      aliveSprite.setPosition(Gdx.graphics.getWidth()/2 - aliveSprite.getWidth()/2, Gdx.graphics.getHeight()/2 - aliveSprite.getHeight()/2)
@@ -90,7 +96,23 @@ class GameView ( var game : GameEngine) extends Screen {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		game.batch.begin();
+		//desenhando background e botoes nextgen e undo
 		game.batch.draw(backgroundTexture, 80 + Gdx.graphics.getWidth()/2 - backgroundTexture.getWidth()/2, 38 + Gdx.graphics.getHeight()/2 - backgroundTexture.getHeight()/2)
+		
+		if(Gdx.input.getX() >= 1220 && Gdx.input.getX() <= 1220 + nextgenTexture.getWidth() && (Gdx.graphics.getHeight() - Gdx.input.getY()) >= 700 && (Gdx.graphics.getHeight() - Gdx.input.getY()) <= 700 + nextgenTexture.getHeight()){
+		 game.batch.draw(selectNextgenTexture, 1220, 700)
+		 if(Gdx.input.justTouched()){
+		   GameController.nextGeneration
+		 }
+		}else{
+		 game.batch.draw(nextgenTexture, 1220, 700)
+		}
+		
+		if(Gdx.input.getX() >= 1200 && Gdx.input.getX() <= 1200 + undoTexture.getWidth() && (Gdx.graphics.getHeight() - Gdx.input.getY()) >= 374 && (Gdx.graphics.getHeight() - Gdx.input.getY()) <= 374 + undoTexture.getHeight()){
+		 game.batch.draw(selectUndoTexture, 1200, 374)
+		}else{
+		 game.batch.draw(undoTexture, 1200, 374)
+		}
 		
 		 for(y <- (0 until 10)){
 		   for(x <- (0 until 10)){
@@ -126,6 +148,8 @@ class GameView ( var game : GameEngine) extends Screen {
 		     
 		   }
 		 }
+		
+		
 		//implementação rapida para teste de nextgeneration e halt
 		if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
 		  GameController.nextGeneration
