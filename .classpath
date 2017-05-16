@@ -17,5 +17,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/ScalaGDX-core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ScalaGDX-desktop"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
