@@ -1,11 +1,11 @@
-package br.unb.cic.poo.gol
+package br.unb.cic.poo.gol.model
 
 import com.google.inject.AbstractModule
-import com.google.inject.name.Names
-import scala.collection.mutable.MutableList
 import net.codingwell.scalaguice.ScalaModule
 import net.codingwell.scalaguice.ScalaMultibinder
-import net.codingwell.scalaguice.ScalaMapBinder
+import br.unb.cic.poo.gol.model.ConwayRule
+import br.unb.cic.poo.gol.model.HighLife
+import br.unb.cic.poo.gol.model.Rule
 
 class RuleModule extends AbstractModule with ScalaModule{
   

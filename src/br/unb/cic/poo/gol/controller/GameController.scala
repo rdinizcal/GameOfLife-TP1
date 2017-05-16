@@ -1,4 +1,11 @@
-package br.unb.cic.poo.gol
+package br.unb.cic.poo.gol.controller
+
+import br.unb.cic.poo.gol.model.Statistics
+
+import br.unb.cic.poo.gol.model.GameEngine
+import br.unb.cic.poo.gol.view.GameView
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication
 
 /**
  * Relaciona o componente View com o componente Model. 
@@ -6,10 +13,16 @@ package br.unb.cic.poo.gol
  * @author Breno Xavier (baseado na implementacao Java de rbonifacio@unb.br
  */
 object GameController {
+  val config = new LwjglApplicationConfiguration()
+  val game = new GameEngine
+  val view = new GameView(game)
+  val app = new LwjglApplication(game, config)
   
   def start {
-    GameView.setup
-    GameView.update
+  config.width = 1920
+  config.height = 1080
+   // view.setup
+    view.update
   }
   
   def halt() {
@@ -21,8 +34,18 @@ object GameController {
 
   def makeCellAlive(i: Int, j: Int) {
     try {
-			GameEngine.makeCellAlive(i, j)
-			GameView.update
+			game.makeCellAlive(i, j)
+		}
+		catch {
+		  case ex: IllegalArgumentException => {
+		    println(ex.getMessage)
+		  }
+		}
+  }
+  
+  def makeCellDead(i: Int, j: Int) {
+    try {
+			game.makeCellDead(i, j)
 		}
 		catch {
 		  case ex: IllegalArgumentException => {
@@ -32,8 +55,7 @@ object GameController {
   }
   
   def nextGeneration {
-    GameEngine.nextGeneration
-    GameView.update
+    game.nextGeneration
   }
   
 }

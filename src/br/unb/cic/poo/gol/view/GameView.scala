@@ -1,17 +1,24 @@
-package br.unb.cic.poo.gol
+package br.unb.cic.poo.gol.view
 
-import scala.io.StdIn.{readInt, readLine}
+import scala.io.StdIn.readLine
 
-object GameView {
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Screen
+import com.badlogic.gdx.graphics.GL20
+import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.Sprite
+
+import br.unb.cic.poo.gol.controller.GameController
+import br.unb.cic.poo.gol.model.GameEngine
+import com.badlogic.gdx.Input
+
+class GameView ( var game : GameEngine) extends Screen {
   
-	private final val LINE = "+-----+"
-	private final val DEAD_CELL = "|     |"
-	private final val ALIVE_CELL = "|  o  |"
 	
-	private final val INVALID_OPTION = 0
-	private final val MAKE_CELL_ALIVE = 1
-	private final val NEXT_GENERATION = 2
-	private final val HALT = 3
+	var aliveTexture, deadTexture, selectorTexture, selectAliveTexture, selectDeadTexture, backgroundTexture: Texture = _
+  var aliveSprite, deadSprite, selectAliveSprite, selectDeadSprite : Sprite = _
+  var i, j, x, y: Int = _ 
+   
 	
   
   /**
@@ -19,20 +26,20 @@ object GameView {
    */
 	def setup {
 	  
-	 if(GameEngine.rules.length == 0){
+	 if(game.rules.length == 0){
 	    println("Não há regras disponíveis")
 	    return
 	  }
 	  	  
 	  println("Regras disponíveis:")
-	  for(i <- (0 until GameEngine.rules.length)) {
-	    println( "["+i+"] " + GameEngine.rules.apply(i).toString() )
+	  for(i <- (0 until game.rules.length)) {
+	    println( "["+i+"] " + game.rules.apply(i).toString() )
 	  }
 	  print("\nQual regra será utilizada no jogo?")
 	  
 	  var option = readLine().toInt
 	  
-	  GameEngine.setRule(option)
+	  game.setRule(option)
 	}
   
   /**
@@ -40,95 +47,99 @@ object GameView {
 	 * possivelmente como uma resposta a uma atualizacao do jogo.
 	 */
 	def update {
-		printFirstRow
-		printLine
-		
-		for(i <- (0 until GameEngine.height)) {
-		  for(j <- (0 until GameEngine.width)) {
-		    print(if (GameEngine.isCellAlive(i, j))  ALIVE_CELL else DEAD_CELL);
-		  }
-		  println("   " + i)
-		  printLine
-		}
-		printOptions
+	  game.setRule(0)
+		this.render(0.1f)
 	}
   
-  private def printOptions {
-	  
-	  var option = 0
-	  println("\n\n")
-	  
-	  do{
-	    println("Rule: "+GameEngine.rule)
-	    println("Select one of the options: \n \n"); 
-			println("[1] Make a cell alive");
-			println("[2] Next generation");
-			println("[3] Halt");
-		
-			print("\n \n Option: ");
-			
-			option = parseOption(readLine)
-	  }while(option == 0)
-	  
-	  option match {
-      case MAKE_CELL_ALIVE => makeCellAlive
-      case NEXT_GENERATION => nextGeneration
-      case HALT => halt
-    }
-	}
-  
-  private def makeCellAlive {
-	  
-	  var i = 0
-	  var j = 0
-	  
-	  do {
-      print("\n Inform the row number (0 - " + (GameEngine.height - 1) + "): ")
-      i = readInt
-      
-      print("\n Inform the column number (0 - " + (GameEngine.width - 1) + "): ")
-      j = readInt
-      
-    } while(!validPosition(i,j))
-      
-    GameController.makeCellAlive(i, j)
-	}
+
 
   private def nextGeneration = GameController.nextGeneration
   private def halt = GameController.halt
 	
-  private def validPosition(i: Int, j: Int): Boolean = {
-		println(i);
-		println(j);
-		i >= 0 && i < GameEngine.height && j >= 0 && j < GameEngine.width
+	override def show(): Unit = {
+    
+     backgroundTexture = new Texture("GameBackground.png")
+     
+     aliveTexture = new Texture("AliveCell.png")
+     aliveSprite = new Sprite(aliveTexture)
+     aliveSprite.setPosition(Gdx.graphics.getWidth()/2 - aliveSprite.getWidth()/2, Gdx.graphics.getHeight()/2 - aliveSprite.getHeight()/2)
+     aliveSprite.setRotation(0f)
+     aliveSprite.setScale(1f, 1f)
+     
+     deadTexture = new Texture("DeadCell.png")
+     deadSprite = new Sprite(deadTexture)
+     deadSprite.setPosition(Gdx.graphics.getWidth()/2 - deadSprite.getWidth()/2, Gdx.graphics.getHeight()/2 - deadSprite.getHeight()/2)
+     deadSprite.setRotation(0f)
+     deadSprite.setScale(1f, 1f)
+     
+     selectAliveTexture = new Texture("SelectedAliveCell.png")
+     selectAliveSprite = new Sprite(selectAliveTexture)
+     selectAliveSprite.setPosition(Gdx.graphics.getWidth()/2 - selectAliveSprite.getWidth()/2, Gdx.graphics.getHeight()/2 - selectAliveSprite.getHeight()/2)
+     selectAliveSprite.setRotation(0f)
+     selectAliveSprite.setScale(1f, 1f)
+     
+     selectDeadTexture = new Texture("SelectedDeadCell.png")
+     selectDeadSprite = new Sprite(selectDeadTexture)
+     selectDeadSprite.setPosition(Gdx.graphics.getWidth()/2 - selectDeadSprite.getWidth()/2, Gdx.graphics.getHeight()/2 - selectDeadSprite.getHeight()/2)
+     selectDeadSprite.setRotation(0f)
+     selectDeadSprite.setScale(1f, 1f)  
 	}
-  
-	def parseOption(option: String): Int = option match {
-    case "1" => MAKE_CELL_ALIVE
-    case "2" => NEXT_GENERATION
-    case "3" => HALT
-    case _ => INVALID_OPTION
-  }
-	
-  
-  /* Imprime uma linha usada como separador das linhas do tabuleiro */
-	private def printLine() {
-	  for(j <- (0 until GameEngine.width)) {
-	    print(LINE)
-	  }
-	  println()
-	}
-  
-  /*
-	 * Imprime os identificadores das colunas na primeira linha do tabuleiro
-	 */
-	private def printFirstRow {
-		println("\n \n");
+   
+  override def render(x$1: Float): Unit = {
+    
+		Gdx.gl.glClearColor(1, 1, 1, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		game.batch.begin();
+		game.batch.draw(backgroundTexture, 80 + Gdx.graphics.getWidth()/2 - backgroundTexture.getWidth()/2, 38 + Gdx.graphics.getHeight()/2 - backgroundTexture.getHeight()/2)
 		
-		for(j <- (0 until GameEngine.width)) {
-		  print("   " + j + "   ")
+		 for(y <- (0 until 10)){
+		   for(x <- (0 until 10)){
+		     //estabelecendo relação do y,x(células) com i,j(pixels)
+		     j=Gdx.graphics.getHeight()/2 - 450/2 + 45*x
+		     i=Gdx.graphics.getWidth()/2 - 450/2 + 45*y
+		     
+		     
+		     
+		     //desenhando celulas
+		     //avaliando se celula ta viva ou morta
+		     if(!game.isCellAlive(y, x)){
+		       //pegando posição do mouse
+		       if(Gdx.input.getX() >= i && Gdx.input.getX() <= i + deadSprite.getWidth() && (Gdx.graphics.getHeight() - Gdx.input.getY()) >= j && (Gdx.graphics.getHeight() - Gdx.input.getY()) <= j + deadSprite.getHeight()){
+		         game.batch.draw(selectDeadSprite, i, j)
+		         //pegando input do mouse(revivendo/matando celulas)
+		         if(Gdx.input.justTouched()){
+		           GameController.makeCellAlive(y, x)
+		         }
+		       }else{
+		         game.batch.draw(deadSprite, i, j)
+		       }
+		     }else{
+		       if(Gdx.input.getX() >= i && Gdx.input.getX() <= i + aliveSprite.getWidth() && (Gdx.graphics.getHeight() - Gdx.input.getY()) >= j && (Gdx.graphics.getHeight() - Gdx.input.getY()) <= j + aliveSprite.getHeight()){
+		         game.batch.draw(selectAliveSprite, i, j)
+		         if(Gdx.input.justTouched()){
+		           GameController.makeCellDead(y, x)
+		         }
+		       }else{
+		         game.batch.draw(aliveSprite, i, j)
+		       }
+		     }
+		     
+		   }
+		 }
+		//implementação rapida para teste de nextgeneration e halt
+		if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+		  GameController.nextGeneration
 		}
-		println()
-	}
+  	game.batch.end();
+  	
+    }
+   
+  override def dispose(): Unit = {
+   }
+  override def hide(): Unit = {}
+  override def pause(): Unit = {}
+  
+  override def resize(x$1: Int,x$2: Int): Unit = {}
+  override def resume(): Unit = {}
   
 }

@@ -1,4 +1,7 @@
-package br.unb.cic.poo.gol
+package br.unb.cic.poo.gol.model
+
+
+import br.unb.cic.poo.gol.controller.GameController
 
 trait Rule {
   
@@ -21,5 +24,5 @@ trait Rule {
 	 * Verifica se uma posicao (i, j) referencia uma celula valida no tabuleiro.
 	 */
   def validPosition(i: Int, j: Int) =
-    i >= 0 && i < GameEngine.height && j >= 0 && j < GameEngine.width;
+    i >= 0 && i < GameController.game.height && j >= 0 && j < GameController.game.width;
 }

@@ -1,12 +1,21 @@
-package br.unb.cic.poo.gol
+package br.unb.cic.poo.gol.model
 
 import scala.collection.mutable.ListBuffer
-import scala.collection.mutable.MutableList
-
 import com.google.inject.Guice
+import br.unb.cic.poo.gol.model.RuleModule
+import br.unb.cic.poo.gol.model.Statistics
+import br.unb.cic.poo.gol.Main
+import br.unb.cic.poo.gol.model.Rule
+import br.unb.cic.poo.gol.model.RuleComponent
+import br.unb.cic.poo.gol.model.RuleModule
+import br.unb.cic.poo.gol.model.Statistics
+import br.unb.cic.poo.gol.model.Cell
+import com.badlogic.gdx.Game
+import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import br.unb.cic.poo.gol.view.GameView
 
 
-object GameEngine {
+class GameEngine extends Game{
   
   val injector = Guice.createInjector(new RuleModule)
   val rules = injector.getInstance(classOf[RuleComponent]).getRules().toSeq
@@ -14,12 +23,14 @@ object GameEngine {
     
   val height = Main.height
   val width = Main.width
+  
+  var batch : SpriteBatch = _
 
   val cells = Array.ofDim[Cell](height, width)
   
-  for (i <- (0 until height)) {
-    for (j <- (0 until width)) {
-      cells(i)(j) = new Cell
+  for (y <- (0 until height)) {
+    for (x <- (0 until width)) {
+      cells(y)(x) = new Cell
     }
   }
   
@@ -35,12 +46,12 @@ object GameEngine {
     val mustRevive = new ListBuffer[Cell]
     val mustKill = new ListBuffer[Cell]
 
-    for (i <- (0 until height)) {
-      for (j <- (0 until width)) {
-        if (rule.shouldRevive(i, j)) {
-          mustRevive += cells(i)(j)
-        } else if ((!rule.shouldKeepAlive(i, j)) && cells(i)(j).isAlive) {
-          mustKill += cells(i)(j)
+    for (y <- (0 until height)) {
+      for (x <- (0 until width)) {
+        if (rule.shouldRevive(y, x)) {
+          mustRevive += cells(y)(x)
+        } else if ((!rule.shouldKeepAlive(y, x)) && cells(y)(x).isAlive) {
+          mustKill += cells(y)(x)
         }
       }
     }
@@ -56,38 +67,70 @@ object GameEngine {
     }
 
   }
+  
+   override def create : Unit = {
+     batch = new SpriteBatch()
+     this.setScreen(new GameView(this))
+   }
+   
+   override def render() : Unit = {
+     super.render()
+	}
+	
+	override def dispose() : Unit = {
+		batch.dispose();
+		
+	}
 
   /**
-   * Torna a celula de posicao (i, j) viva
+   * Torna a celula de posicao (y, x) viva
    *
-   * @param i posicao vertical da celula
-   * @param j posicao horizontal da celula
+   * @param y posicao vertical da celula
+   * @param x posicao horizontal da celula
    *
-   * @throws InvalidParameterException caso a posicao (i, j) nao seja valida.
+   * @throws InvalidParameterException caso a posicao (y, x) nao seja valida.
    */
   @throws(classOf[IllegalArgumentException])
-  def makeCellAlive(i: Int, j: Int) = {
-    if (rule.validPosition(i, j)) {
-      cells(i)(j).revive
+  def makeCellAlive(y: Int, x: Int) = {
+    if (rule.validPosition(y, x)) {
+      cells(y)(x).revive
       Statistics.recordRevive
+    } else {
+      throw new IllegalArgumentException
+    }
+  }
+  
+  /**
+   * Torna a celula de posicao (y, x) morta
+   *
+   * @param y posicao vertical da celula
+   * @param x posicao horizontal da celula
+   *
+   * @throws InvalidParameterException caso a posicao (y, x) nao seja valida.
+   */
+  @throws(classOf[IllegalArgumentException])
+  def makeCellDead(y: Int, x: Int) = {
+    if (rule.validPosition(y, x)) {
+      cells(y)(x).kill
+      Statistics.removeRevive
     } else {
       throw new IllegalArgumentException
     }
   }
 
   /**
-   * Verifica se uma celula na posicao (i, j) estah viva.
+   * Verifica se uma celula na posicao (y, x) estah viva.
    *
    * @param i Posicao vertical da celula
    * @param j Posicao horizontal da celula
-   * @return Verdadeiro caso a celula de posicao (i,j) esteja viva.
+   * @return Verdadeiro caso a celula de posicao (y,x) esteja viva.
    *
-   * @throws InvalidParameterException caso a posicao (i,j) nao seja valida.
+   * @throws InvalidParameterException caso a posicao (y,x) nao seja valida.
    */
   @throws(classOf[IllegalArgumentException])
-  def isCellAlive(i: Int, j: Int): Boolean = {
-    if (rule.validPosition(i, j)) {
-      cells(i)(j).isAlive
+  def isCellAlive(y: Int, x: Int): Boolean = {
+    if (rule.validPosition(y, x)) {
+      cells(y)(x).isAlive
     } else {
       throw new IllegalArgumentException
     }
@@ -102,22 +145,22 @@ object GameEngine {
    */
   def numberOfAliveCells {
     var aliveCells = 0
-    for (i <- (0 until height)) {
-      for (j <- (0 until width)) {
-        if (isCellAlive(i, j)) aliveCells += 1
+    for (y <- (0 until height)) {
+      for (x <- (0 until width)) {
+        if (isCellAlive(y, x)) aliveCells += 1
       }
     }
   }
 
   /*
 	 * Computa o numero de celulas vizinhas vivas, dada uma posicao no ambiente
-	 * de referencia identificada pelos argumentos (i,j).
+	 * de referencia identificada pelos argumentos (y,x).
 	 */
-  def numberOfNeighborhoodAliveCells(i: Int, j: Int): Int = {
+  def numberOfNeighborhoodAliveCells(y: Int, x: Int): Int = {
     var alive = 0
-    for (a <- (i - 1 to i + 1)) {
-      for (b <- (j - 1 to j + 1)) {
-        if (rule.validPosition(a, b) && (!(a == i && b == j)) && cells(a)(b).isAlive) {
+    for (a <- (y - 1 to x + 1)) {
+      for (b <- (y - 1 to x + 1)) {
+        if (rule.validPosition(a, b) && (!(a == y && b == x)) && cells(a)(b).isAlive) {
           alive += 1
         }
       }

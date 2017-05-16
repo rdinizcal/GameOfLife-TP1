@@ -1,4 +1,4 @@
-package br.unb.cic.poo.gol
+package br.unb.cic.poo.gol.model
 
 /**
  * Classe usada para computar as estatisticas 
@@ -15,6 +15,8 @@ object Statistics {
 	def getRevivedCells = revivedCells
 
 	def recordRevive = revivedCells += 1
+	
+	def removeRevive = revivedCells -=1
 
   def getKilledCells = killedCells
 	
