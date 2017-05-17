@@ -17,9 +17,4 @@ trait Rule {
    */
   override def toString() : String;
   
-  /**
-	 * Verifica se uma posicao (i, j) referencia uma celula valida no tabuleiro.
-	 */
-  def validPosition(i: Int, j: Int) =
-    i >= 0 && i < GameEngine.height && j >= 0 && j < GameEngine.width;
 }

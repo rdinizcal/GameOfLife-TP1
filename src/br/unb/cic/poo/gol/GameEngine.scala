@@ -67,7 +67,7 @@ object GameEngine {
    */
   @throws(classOf[IllegalArgumentException])
   def makeCellAlive(i: Int, j: Int) = {
-    if (rule.validPosition(i, j)) {
+    if (validPosition(i, j)) {
       cells(i)(j).revive
       Statistics.recordRevive
     } else {
@@ -86,7 +86,7 @@ object GameEngine {
    */
   @throws(classOf[IllegalArgumentException])
   def isCellAlive(i: Int, j: Int): Boolean = {
-    if (rule.validPosition(i, j)) {
+    if (validPosition(i, j)) {
       cells(i)(j).isAlive
     } else {
       throw new IllegalArgumentException
@@ -109,20 +109,30 @@ object GameEngine {
     }
   }
 
-  /*
+  /**
 	 * Computa o numero de celulas vizinhas vivas, dada uma posicao no ambiente
 	 * de referencia identificada pelos argumentos (i,j).
 	 */
   def numberOfNeighborhoodAliveCells(i: Int, j: Int): Int = {
     var alive = 0
-    for (a <- (i - 1 to i + 1)) {
-      for (b <- (j - 1 to j + 1)) {
-        if (rule.validPosition(a, b) && (!(a == i && b == j)) && cells(a)(b).isAlive) {
+    
+    for (line <- (i - 1 to i + 1)) {
+      for (col <- (j - 1 to j + 1)) {
+        val a = if (line == -1) height-1 else if (line == height) 0 else line
+        val b = if (col == -1) width-1 else if (col == width) 0 else col
+        if (validPosition(a, b) && (!(line == i && col == j)) && cells(a)(b).isAlive) {
           alive += 1
         }
       }
     }
     alive
   }
+  
+  /**
+	 * Verifica se uma posicao (i, j) referencia uma celula valida no tabuleiro.
+	 */
+  def validPosition(i: Int, j: Int) = (i >= 0) && (i < GameEngine.height) && 
+                                      (j >= 0) && (j < GameEngine.width);
+    
 
 }
