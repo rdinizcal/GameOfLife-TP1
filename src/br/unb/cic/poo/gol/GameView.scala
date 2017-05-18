@@ -11,26 +11,29 @@ object GameView {
 	private final val INVALID_OPTION = 0
 	private final val MAKE_CELL_ALIVE = 1
 	private final val NEXT_GENERATION = 2
-	private final val HALT = 3
+	private final val AUTO = 3
+	private final val HALT = 4
 	
-  
+  private var auto = false;
   /**
    * Define as regras do jogo
    */
 	def setup {
-	  
+	 var option = -1; 
 	 if(GameEngine.rules.length == 0){
 	    println("Não há regras disponíveis")
 	    return
 	  }
-	  	  
-	  println("Regras disponíveis:")
-	  for(i <- (0 until GameEngine.rules.length)) {
-	    println( "["+i+"] " + GameEngine.rules.apply(i).toString() )
-	  }
-	  print("\nQual regra será utilizada no jogo?")
 	  
-	  var option = readLine().toInt
+	  do{
+  	  println("Regras disponíveis:")
+  	  for(i <- (1 until GameEngine.rules.length+1)) {
+  	    println( "["+i+"] " + GameEngine.rules.apply(i-1).toString() )
+  	  }
+	    print("\nQual regra será utilizada no jogo? ")
+	  
+	    option = readInt - 1
+	  }while(option < 0 || option > GameEngine.rules.length);
 	  
 	  GameEngine.setRule(option)
 	}
@@ -50,7 +53,7 @@ object GameView {
 		  println("   " + i)
 		  printLine
 		}
-		printOptions
+		if(!auto) printOptions
 	}
   
   private def printOptions {
@@ -63,7 +66,8 @@ object GameView {
 	    println("Select one of the options: \n \n"); 
 			println("[1] Make a cell alive");
 			println("[2] Next generation");
-			println("[3] Halt");
+			println("[3] Auto");
+			println("[4] Halt");
 		
 			print("\n \n Option: ");
 			
@@ -73,6 +77,7 @@ object GameView {
 	  option match {
       case MAKE_CELL_ALIVE => makeCellAlive
       case NEXT_GENERATION => nextGeneration
+      case AUTO => autoPlay
       case HALT => halt
     }
 	}
@@ -89,24 +94,35 @@ object GameView {
       print("\n Inform the column number (0 - " + (GameEngine.width - 1) + "): ")
       j = readInt
       
-    } while(!validPosition(i,j))
+    } while(!GameEngine.validPosition(i,j))
       
     GameController.makeCellAlive(i, j)
 	}
-
+	
+  private def autoPlay = {
+    auto = true;
+    try {
+      while(auto){
+        nextGeneration
+        println("Press CTRL-C to stop")
+        Thread.sleep(2000)
+      }
+    } catch {
+      case e : InterruptedException => {
+        auto = false
+      }
+    }
+  }
+  
   private def nextGeneration = GameController.nextGeneration
   private def halt = GameController.halt
 	
-  private def validPosition(i: Int, j: Int): Boolean = {
-		println(i);
-		println(j);
-		i >= 0 && i < GameEngine.height && j >= 0 && j < GameEngine.width
-	}
   
 	def parseOption(option: String): Int = option match {
     case "1" => MAKE_CELL_ALIVE
     case "2" => NEXT_GENERATION
-    case "3" => HALT
+    case "3" => AUTO
+    case "4" => HALT
     case _ => INVALID_OPTION
   }
 	
