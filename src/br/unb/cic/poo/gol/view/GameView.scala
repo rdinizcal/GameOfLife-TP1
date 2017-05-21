@@ -1,107 +1,152 @@
 package br.unb.cic.poo.gol.view
 
-import scala.io.StdIn.{readInt, readLine}
 import br.unb.cic.poo.gol.controller.GameController
 import br.unb.cic.poo.gol.GameEngine
+import scala.swing.event._
+import br.unb.cic.poo.gol.Main
+import scala.swing.ComboBox
+import scala.swing.Button
+import scala.swing.Label
+import scala.swing.Swing
+import scala.swing.FlowPanel
+import scala.swing.BoxPanel
+import java.awt.Dimension
+import java.awt.Color
+import scala.swing.GridPanel
+import br.unb.cic.poo.gol.model.Statistics
+import scala.swing.Alignment
+import scala.swing.Orientation
+import br.unb.cic.poo.gol.model.Rule
 
-object GameView {
+object GameView extends scala.swing.MainFrame {
   
-	private final val LINE = "+-----+"
-	private final val DEAD_CELL = "|     |"
-	private final val ALIVE_CELL = "|  o  |"
-	
-	private final val INVALID_OPTION = 0
-	private final val MAKE_CELL_ALIVE = 1
-	private final val NEXT_GENERATION = 2
-	private final val AUTO = 3
-	private final val HALT = 4
-	
-  private var auto = false;
-  /**
-   * Define as regras do jogo
-   */
-	def setup {
-	 var option = -1; 
-	 if(GameEngine.rules.length == 0){
-	    println("Não há regras disponíveis")
-	    return
-	  }
-	  
-	  do{
-  	  println("Regras disponíveis:")
-  	  for(i <- (1 until GameEngine.rules.length+1)) {
-  	    println( "["+i+"] " + GameEngine.rules.apply(i-1).toString() )
-  	  }
-	    print("\nQual regra será utilizada no jogo? ")
-	  
-	    option = readInt - 1
-	  }while(option < 0 || option > GameEngine.rules.length);
-	  
-	  GameEngine.setRule(option)
-	}
+	val width = 640
+  val height = 480
   
-  /**
-	 * Atualiza o componente view (representado pela classe GameBoard),
-	 * possivelmente como uma resposta a uma atualizacao do jogo.
-	 */
-	def update {
-		printFirstRow
-		printLine
-		
-		for(i <- (0 until GameEngine.height)) {
-		  for(j <- (0 until GameEngine.width)) {
-		    print(if (GameEngine.isCellAlive(i, j))  ALIVE_CELL else DEAD_CELL);
-		  }
-		  println("   " + i)
-		  printLine
-		}
-		if(!auto) printOptions
-	}
+  title = "Game of Life"
+  preferredSize = new Dimension(width,height)
   
-  private def printOptions {
-	  
-	  var option = 0
-	  println("\n\n")
-	  
-	  do{
-	    println("Rule: "+GameEngine.rule)
-	    println("Select one of the options: \n \n"); 
-			println("[1] Make a cell alive");
-			println("[2] Next generation");
-			println("[3] Auto");
-			println("[4] Halt");
-		
-			print("\n \n Option: ");
-			
-			option = parseOption(readLine)
-	  }while(option == 0)
-	  
-	  option match {
-      case MAKE_CELL_ALIVE => makeCellAlive
-      case NEXT_GENERATION => nextGeneration
-      case AUTO => autoPlay
-      case HALT => halt
+  
+  /******************* TOP MENU COMPONENTS *******************/
+  val ruleLabel = new Label("Rule: ") { preferredSize = new Dimension(40,30) }
+  val ruleComboBox = new ComboBox(GameEngine.rules) { 
+    preferredSize = new Dimension(200,30) 
+    /*reactions += {
+      //case  e : ListSelectionChanged[Rule] => setRule(e)
+    }*/ 
+  }
+  
+  /******************** TABLE COMPONENTS ********************/
+  val cells  = Array.ofDim[Button](Main.height,Main.width)
+  
+  for (i <- (0 until Main.height)) {
+    for (j <- (0 until Main.height)) {
+      cells(i)(j) = new Button() { 
+        background = Color.WHITE
+        reactions += {
+          case ButtonClicked(self) => makeCellAlive(i, j)
+        }
+      }
     }
-	}
+  }
   
-  private def makeCellAlive {
-	  
-	  var i = 0
-	  var j = 0
-	  
-	  do {
-      print("\n Inform the row number (0 - " + (GameEngine.height - 1) + "): ")
-      i = readInt
+  val statistics = new Label() {
+    horizontalTextPosition = Alignment.Left
+    text = Statistics.getRevivedCells + " revived cells " +
+                    Statistics.getKilledCells + " killed cells"
+                    
+  }
+  
+  /****************** RIGHT MENU COMPONENTS ******************/
+  val nextGenButton = new Button(" Next Gen ") 
+  val autoPlayButton = new Button("Play / Stop")
+  val undoButton = new Button("     Undo     ")
+  
+  /****************** SCREEN CONTENTS ******************/
+  contents = new BoxPanel(Orientation.Vertical){
+    contents += Swing.VStrut(5)
+    //Menu de cima
+    contents += new FlowPanel {
+      contents += ruleLabel
+      contents += Swing.HStrut(10)
+      contents += ruleComboBox
       
-      print("\n Inform the column number (0 - " + (GameEngine.width - 1) + "): ")
-      j = readInt
       
-    } while(!GameEngine.validPosition(i,j))
+      maximumSize = new Dimension(width, 30)
+    }
+    contents += Swing.VStrut(10)
+    contents += new BoxPanel(Orientation.Horizontal){
       
+      contents += Swing.HStrut(20)
+      //Tabuleiro
+      contents += new BoxPanel(Orientation.Vertical){
+        
+        contents += new GridPanel(Main.height,Main.width){
+            for (i <- (0 until Main.height)) {
+              for (j <- (0 until Main.height)) {
+                contents += cells(i)(j) 
+            }
+          }
+        }
+        contents += statistics
+      }
+      
+      contents += Swing.HStrut(20)
+      //Menu lateral
+      contents+= new BoxPanel(Orientation.Vertical){
+        contents += Swing.VStrut(10)
+        contents += nextGenButton
+        contents += Swing.VStrut(10)
+        contents += autoPlayButton
+        contents += Swing.VStrut(10)
+        contents += undoButton
+        contents += Swing.VStrut(10)
+        
+        maximumSize = new Dimension(120, height)
+      }
+      
+    }
+  }  
+  
+  /****************** REACTIONS ******************/
+  reactions += {
+    case ButtonClicked(nextGenButton) => nextGeneration()
+    case ButtonClicked(autoPlayButton) => autoPlay()
+    case ButtonClicked(undoButton) => undo()
+  }
+  
+  /****************** EVENT HANDLERS ******************/
+  private def makeCellAlive(i : Int , j : Int) {
     GameController.makeCellAlive(i, j)
-	}
+  }
+  
+  private def nextGeneration() {
+    GameController.nextGeneration
+    statistics.repaint()
+  }
+  
+  private def autoPlay() {}
+  
+  private def undo(){}
+  
+  private def setRule(e : ValueChanged){
+    //GameEngine.setRule
+  }
+  
+  /****************** EXTERNAL FUNCTIONS ****************/
+  def update(){
+    for (i <- (0 until Main.height)) {
+      for (j <- (0 until Main.height)) {
+        cells(i)(j).background = if (GameEngine.isCellAlive(i, j)) Color.BLACK else Color.WHITE  
+      }
+    }
+  }
+  
+  
+  
 	
-  private def autoPlay = {
+	
+	/*private def autoPlay = {
     auto = true;
     try {
       while(auto){
@@ -114,39 +159,5 @@ object GameView {
         auto = false
       }
     }
-  }
-  
-  private def nextGeneration = GameController.nextGeneration
-  private def halt = GameController.halt
-	
-  
-	def parseOption(option: String): Int = option match {
-    case "1" => MAKE_CELL_ALIVE
-    case "2" => NEXT_GENERATION
-    case "3" => AUTO
-    case "4" => HALT
-    case _ => INVALID_OPTION
-  }
-	
-  
-  /* Imprime uma linha usada como separador das linhas do tabuleiro */
-	private def printLine() {
-	  for(j <- (0 until GameEngine.width)) {
-	    print(LINE)
-	  }
-	  println()
-	}
-  
-  /*
-	 * Imprime os identificadores das colunas na primeira linha do tabuleiro
-	 */
-	private def printFirstRow {
-		println("\n \n");
-		
-		for(j <- (0 until GameEngine.width)) {
-		  print("   " + j + "   ")
-		}
-		println()
-	}
-  
+  }*/
 }

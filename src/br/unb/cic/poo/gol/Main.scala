@@ -2,7 +2,7 @@ package br.unb.cic.poo.gol
 
 import scala.collection.mutable.ListBuffer
 import br.unb.cic.poo.gol.controller.GameController
-import br.unb.cic.poo.gol.view.UI
+import br.unb.cic.poo.gol.view.GameView
 
 object Main {
   
@@ -10,9 +10,7 @@ object Main {
   val width = 10
   
   def main(args: Array[String]){
-    UI.visible = true
-    UI.centerOnScreen()
-    
-    GameController.start
+    GameView.visible = true
+    GameView.centerOnScreen()
   }
 }
