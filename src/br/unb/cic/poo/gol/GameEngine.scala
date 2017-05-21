@@ -4,6 +4,10 @@ import scala.collection.mutable.ListBuffer
 import scala.collection.mutable.MutableList
 
 import com.google.inject.Guice
+import br.unb.cic.poo.gol.model.Statistics
+import br.unb.cic.poo.gol.model.Rule
+import br.unb.cic.poo.gol.model.RuleModule
+import br.unb.cic.poo.gol.model.Cell
 
 
 object GameEngine {

@@ -1,4 +1,4 @@
-package br.unb.cic.poo.gol
+package br.unb.cic.poo.gol.model
 
 trait Rule {
   

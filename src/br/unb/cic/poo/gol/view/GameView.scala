@@ -1,6 +1,8 @@
-package br.unb.cic.poo.gol
+package br.unb.cic.poo.gol.view
 
 import scala.io.StdIn.{readInt, readLine}
+import br.unb.cic.poo.gol.controller.GameController
+import br.unb.cic.poo.gol.GameEngine
 
 object GameView {
   
