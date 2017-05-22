@@ -27,14 +27,5 @@ object Statistics {
 	}
 	
   def recordKill = killedCells += 1 
-
-	def display = {
-		println("=================================");
-		println("           Statistics            ");
-		println("=================================");
-		println("Revived cells: " + revivedCells);
-		println("Killed cells: " + killedCells);
-		println("=================================");
-	}
   
 }

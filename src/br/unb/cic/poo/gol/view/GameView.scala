@@ -30,12 +30,7 @@ object GameView extends scala.swing.MainFrame {
   
   /******************* TOP MENU COMPONENTS *******************/
   val ruleLabel = new Label("Rule: ") { preferredSize = new Dimension(40,30) }
-  val ruleComboBox = new ComboBox(GameEngine.rules) { 
-    preferredSize = new Dimension(200,30) 
-    /*reactions += {
-      case  e : ListSelectionChanged[Rule] => setRule(e)
-    }*/ 
-  }
+  val ruleComboBox = new ComboBox(GameEngine.rules) {preferredSize = new Dimension(200,30)}
   
   /******************** TABLE COMPONENTS ********************/
   val cells  = Array.ofDim[Button](Main.height,Main.width)
@@ -59,10 +54,27 @@ object GameView extends scala.swing.MainFrame {
   }
   
   /****************** RIGHT MENU COMPONENTS ******************/
-  val nextGenButton = new Button(" Next Gen  ") 
-  val autoPlayButton = new Button("Play / Stop")
-  val clearButton = new Button("    Clear      ")
-  val undoButton = new Button("     Undo     ")
+  val nextGenButton = new Button(" Next Gen  ") {
+    reactions += {
+      case ButtonClicked(nextGenButton) => nextGeneration()
+    }
+  }
+  val autoPlayButton = new Button("Play / Stop"){
+    reactions += {
+      case ButtonClicked(autoPlayButton) => avaliateAutoPlay()  
+    }  
+  }
+  
+  val clearButton = new Button("    Clear      "){
+    reactions += {
+      case ButtonClicked(clearButton) => clear()
+    }
+  }
+  val undoButton = new Button("     Undo     ") {
+    reactions += {
+      case ButtonClicked(undoButton) => undo()
+    }
+  }
   
   /****************** SCREEN CONTENTS ******************/
   contents = new BoxPanel(Orientation.Vertical){
@@ -72,7 +84,6 @@ object GameView extends scala.swing.MainFrame {
       contents += ruleLabel
       contents += Swing.HStrut(10)
       contents += ruleComboBox
-      
       
       maximumSize = new Dimension(width, 30)
     }
@@ -114,18 +125,9 @@ object GameView extends scala.swing.MainFrame {
   
   /****************** REACTIONS ******************/
   listenTo(ruleComboBox.selection)
-  listenTo(nextGenButton)
-  listenTo(autoPlayButton)
-  listenTo(clearButton)
-  listenTo(undoButton)
+  
   reactions += {
-    
     case SelectionChanged(ruleComboBox) => setRule()
-    case ButtonClicked(nextGenButton) => nextGeneration()
-    case ButtonClicked(autoPlayButton) => avaliateAutoPlay()
-    case ButtonClicked(clearButton) => clear()
-    case ButtonClicked(undoButton) => undo()
-    
   }
   
   /****************** EVENT HANDLERS ******************/
@@ -172,7 +174,6 @@ object GameView extends scala.swing.MainFrame {
   
   private def setRule(){
    GameEngine.setRule(ruleComboBox.selection.index)
-   print(GameEngine.rule)
   }
   
   /****************** EXTERNAL FUNCTIONS ****************/
