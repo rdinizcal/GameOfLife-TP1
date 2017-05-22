@@ -42,7 +42,7 @@ object GameView extends scala.swing.MainFrame {
   for (i <- (0 until Main.height)) {
     for (j <- (0 until Main.height)) {
       cells(i)(j) = new Button() { 
-        background = Color.WHITE
+        background = Color.LIGHT_GRAY
         reactions += {
           case ButtonClicked(self) => avaliator(i, j)
         }
@@ -110,6 +110,7 @@ object GameView extends scala.swing.MainFrame {
   
   /****************** REACTIONS ******************/
   listenTo(ruleComboBox.selection)
+  listenTo(nextGenButton)
   reactions += {
     case ButtonClicked(nextGenButton) => nextGeneration()
     case ButtonClicked(autoPlayButton) => autoPlay()
@@ -156,7 +157,7 @@ object GameView extends scala.swing.MainFrame {
   def update(){
     for (i <- (0 until Main.height)) {
       for (j <- (0 until Main.height)) {
-        cells(i)(j).background = if (GameEngine.isCellAlive(i, j)) Color.BLACK else Color.WHITE  
+        cells(i)(j).background = if (GameEngine.isCellAlive(i, j)) Color.BLUE else Color.LIGHT_GRAY 
       }
     }
   }
