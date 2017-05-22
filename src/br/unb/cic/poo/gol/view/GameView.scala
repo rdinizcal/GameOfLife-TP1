@@ -17,6 +17,7 @@ import br.unb.cic.poo.gol.model.Statistics
 import scala.swing.Alignment
 import scala.swing.Orientation
 import br.unb.cic.poo.gol.model.Rule
+import br.unb.cic.poo.gol.AutoPlay
 
 object GameView extends scala.swing.MainFrame {
   
@@ -60,6 +61,7 @@ object GameView extends scala.swing.MainFrame {
   /****************** RIGHT MENU COMPONENTS ******************/
   val nextGenButton = new Button(" Next Gen  ") 
   val autoPlayButton = new Button("Play / Stop")
+  val clearButton = new Button("    Clear      ")
   val undoButton = new Button("     Undo     ")
   
   /****************** SCREEN CONTENTS ******************/
@@ -99,6 +101,8 @@ object GameView extends scala.swing.MainFrame {
         contents += Swing.VStrut(10)
         contents += autoPlayButton
         contents += Swing.VStrut(10)
+        contents += clearButton
+        contents += Swing.VStrut(10)
         contents += undoButton
         contents += Swing.VStrut(10)
         
@@ -111,11 +115,17 @@ object GameView extends scala.swing.MainFrame {
   /****************** REACTIONS ******************/
   listenTo(ruleComboBox.selection)
   listenTo(nextGenButton)
+  listenTo(autoPlayButton)
+  listenTo(clearButton)
+  listenTo(undoButton)
   reactions += {
-    case ButtonClicked(nextGenButton) => nextGeneration()
-    case ButtonClicked(autoPlayButton) => autoPlay()
-    case ButtonClicked(undoButton) => undo()
+    
     case SelectionChanged(ruleComboBox) => setRule()
+    case ButtonClicked(nextGenButton) => nextGeneration()
+    case ButtonClicked(autoPlayButton) => avaliateAutoPlay()
+    case ButtonClicked(clearButton) => clear()
+    case ButtonClicked(undoButton) => undo()
+    
   }
   
   /****************** EVENT HANDLERS ******************/
@@ -137,16 +147,28 @@ object GameView extends scala.swing.MainFrame {
     }else{
       makeCellAlive(i, j)
     }
+    statistics.repaint()
   }
   
   private def nextGeneration() {
     GameController.nextGeneration
-    statistics.repaint()
+    
   }
   
-  private def autoPlay() {}
+  private def avaliateAutoPlay() {
+    if(AutoPlay.auto){
+      AutoPlay.stop
+    }else{
+      AutoPlay.play
+    }
+    GameEngine.autoPlay
+  }
   
   private def undo(){}
+  
+  private def clear() {
+    GameController.clear
+  }
   
   private def setRule(){
    GameEngine.setRule(ruleComboBox.selection.index)

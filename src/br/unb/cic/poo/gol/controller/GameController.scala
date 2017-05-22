@@ -53,4 +53,11 @@ object GameController {
     GameView.update
   }
   
+  def clear {
+    GameEngine.clear
+    GameView.update
+  }
+  
+ 
+  
 }

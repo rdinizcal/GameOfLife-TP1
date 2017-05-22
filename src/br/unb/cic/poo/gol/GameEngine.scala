@@ -8,13 +8,18 @@ import br.unb.cic.poo.gol.model.Statistics
 import br.unb.cic.poo.gol.model.Rule
 import br.unb.cic.poo.gol.model.RuleModule
 import br.unb.cic.poo.gol.model.Cell
+import br.unb.cic.poo.gol.view.GameView
+import scala.swing.event.ButtonClicked
+import scala.swing.Button
+import scala.swing.AbstractButton
+
 
 
 object GameEngine {
   
   val injector = Guice.createInjector(new RuleModule)
   val rules = injector.getInstance(classOf[RuleComponent]).getRules().toSeq
-  var rule : Rule = null
+  var rule : Rule = rules.apply(0)
     
   val height = Main.height
   val width = Main.width
@@ -63,6 +68,15 @@ object GameEngine {
   /*
    * Limpa o board
    * */
+  def clear{
+    for (i <- (0 until height)) {
+      for (j <- (0 until width)) {
+        if (isCellAlive(i, j)){
+          makeCellDead(i, j)
+        }
+      }
+    }
+  }
 
   /**
    * Torna a celula de posicao (i, j) viva
@@ -150,6 +164,11 @@ object GameEngine {
 	 */
   def validPosition(i: Int, j: Int) = (i >= 0) && (i < GameEngine.height) && 
                                       (j >= 0) && (j < GameEngine.width);
-    
+  
+  /*
+   * Auto Play
+   * */
+    def autoPlay{
+    }
 
 }
