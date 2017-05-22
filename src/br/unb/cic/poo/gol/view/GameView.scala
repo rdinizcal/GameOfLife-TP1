@@ -32,7 +32,7 @@ object GameView extends scala.swing.MainFrame {
   val ruleComboBox = new ComboBox(GameEngine.rules) { 
     preferredSize = new Dimension(200,30) 
     /*reactions += {
-      //case  e : ListSelectionChanged[Rule] => setRule(e)
+      case  e : ListSelectionChanged[Rule] => setRule(e)
     }*/ 
   }
   
@@ -58,7 +58,7 @@ object GameView extends scala.swing.MainFrame {
   }
   
   /****************** RIGHT MENU COMPONENTS ******************/
-  val nextGenButton = new Button(" Next Gen ") 
+  val nextGenButton = new Button(" Next Gen  ") 
   val autoPlayButton = new Button("Play / Stop")
   val undoButton = new Button("     Undo     ")
   
@@ -109,10 +109,12 @@ object GameView extends scala.swing.MainFrame {
   }  
   
   /****************** REACTIONS ******************/
+  listenTo(ruleComboBox.selection)
   reactions += {
     case ButtonClicked(nextGenButton) => nextGeneration()
     case ButtonClicked(autoPlayButton) => autoPlay()
     case ButtonClicked(undoButton) => undo()
+    case SelectionChanged(ruleComboBox) => setRule()
   }
   
   /****************** EVENT HANDLERS ******************/
@@ -145,8 +147,9 @@ object GameView extends scala.swing.MainFrame {
   
   private def undo(){}
   
-  private def setRule(e : ValueChanged){
-    //GameEngine.setRule
+  private def setRule(){
+   GameEngine.setRule(ruleComboBox.selection.index)
+   print(GameEngine.rule)
   }
   
   /****************** EXTERNAL FUNCTIONS ****************/

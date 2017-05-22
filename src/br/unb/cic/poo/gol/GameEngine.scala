@@ -60,6 +60,9 @@ object GameEngine {
     }
 
   }
+  /*
+   * Limpa o board
+   * */
 
   /**
    * Torna a celula de posicao (i, j) viva
