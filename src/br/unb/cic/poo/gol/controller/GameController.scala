@@ -21,6 +21,33 @@ object GameController {
 		}
   }
   
+  def makeCellDead(i: Int, j: Int) {
+    try {
+			GameEngine.makeCellDead(i, j)
+			GameView.update
+		}
+		catch {
+		  case ex: IllegalArgumentException => {
+		    println(ex.getMessage)
+		  }
+		}
+  }
+  
+  
+  def isCellAlive(i: Int, j: Int): Boolean ={
+    try {
+      GameView.update
+			GameEngine.isCellAlive(i, j)
+			
+		}
+		catch {
+		  case ex: IllegalArgumentException => {
+		    println(ex.getMessage)
+		  }
+		}
+		return GameEngine.isCellAlive(i, j)
+  }
+  
   def nextGeneration {
     GameEngine.nextGeneration
     GameView.update

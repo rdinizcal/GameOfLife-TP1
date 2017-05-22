@@ -15,6 +15,8 @@ object Statistics {
 	def getRevivedCells = revivedCells
 
 	def recordRevive = revivedCells += 1
+	
+	def removeRevive = revivedCells -= 1
 
   def getKilledCells = killedCells
 	

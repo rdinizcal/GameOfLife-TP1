@@ -78,6 +78,16 @@ object GameEngine {
       throw new IllegalArgumentException
     }
   }
+  
+  @throws(classOf[IllegalArgumentException])
+  def makeCellDead(i: Int, j: Int) = {
+    if (validPosition(i, j)) {
+      cells(i)(j).kill
+      Statistics.removeRevive
+    } else {
+      throw new IllegalArgumentException
+    }
+  }
 
   /**
    * Verifica se uma celula na posicao (i, j) estah viva.

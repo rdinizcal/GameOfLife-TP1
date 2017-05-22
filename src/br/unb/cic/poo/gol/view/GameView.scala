@@ -44,7 +44,7 @@ object GameView extends scala.swing.MainFrame {
       cells(i)(j) = new Button() { 
         background = Color.WHITE
         reactions += {
-          case ButtonClicked(self) => makeCellAlive(i, j)
+          case ButtonClicked(self) => avaliator(i, j)
         }
       }
     }
@@ -118,6 +118,22 @@ object GameView extends scala.swing.MainFrame {
   /****************** EVENT HANDLERS ******************/
   private def makeCellAlive(i : Int , j : Int) {
     GameController.makeCellAlive(i, j)
+  }
+  
+  private def makeCellDead(i : Int , j : Int) {
+    GameController.makeCellDead(i, j)
+  }
+  
+  private def isCellAlive(i : Int , j : Int): Boolean = {
+    GameController.isCellAlive(i,j)
+  }
+  
+  private def avaliator(i : Int , j : Int) {
+    if (GameController.isCellAlive(i,j)){
+      makeCellDead(i, j)
+    }else{
+      makeCellAlive(i, j)
+    }
   }
   
   private def nextGeneration() {
