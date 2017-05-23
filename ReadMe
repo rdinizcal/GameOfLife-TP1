@@ -1,0 +1,21 @@
+Integrantes do grupo: -Ricardo Diniz
+					  -João Marcos
+					  -David Silva
+
+
+	Neste arquivo, você encontrará três diretórios, cada um contendo uma implementação do Game of Life, todas desenvolvidas na linguagem Scala. As implementações
+são: uma versão do projeto original do GoL seguindo o Template-method; outra versão usando a abordagem Strategy, também contendo apenas a implementação original;
+e uma última versão, mais completa, expandindo a abordagem Strategy e seguindo o padrão de projeto Model View Controller(MVC), contendo suporte para o cálculo de 
+gerações com Células nas bordas (Ambiente Infinito), uma interface gráfica (implementada com Swing), injeção de dependência (utilizando o Google Guice), suporte 
+para Undo e Redo (padrão de desenho Memento) e suporte para cálculo automático de próximas gerações.
+
+	Todos os códigos utilizam dependências Maven (Guice e Swing), descritas em pom.xml. Utilizando o Eclipse corretamente configurado para executar projetos 
+Scala, basta rodar o projeto como um projeto Maven e executar a classe Main.scala como uma aplicação Scala.
+
+	O link para o repostório do projeto no github se encontra ao final deste ReadMe. Perceba que ele contém dois branches para a parte gráfica (dev-swing e 
+dev-gui). O galho dev-gui contém a mesma implementação, porém utilizando o LibGDX como interface gráfica.  No projeto final, contido no terceiro diretório deste 
+arquivo, o grupo escolheu seguir com o dev-swing, portanto utilizando Swing para a implementação da interface gráfica. Essa escolha foi feita, pois a utilização
+do LibGDX estava gerando erros que não fomos capazes de consertar. Apesar disso, uma versão inicial e faltosa pode ser executada, caso deseje, para comparar as 
+duas interfaces, bastando apenas dar um pull no galho dev-gui e colocar as bibliotecas fornecidas no Build Path do projeto.
+
+https://github.com/rdinizcal/GameOfLife-TP1/

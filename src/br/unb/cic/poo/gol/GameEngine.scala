@@ -25,6 +25,8 @@ object GameEngine {
     
   val height = Main.height
   val width = Main.width
+  
+  var autoplay = false
 
   var cells = Array.ofDim[Cell](height, width)
   
