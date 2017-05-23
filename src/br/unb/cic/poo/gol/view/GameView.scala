@@ -19,6 +19,7 @@ import scala.swing.Orientation
 import br.unb.cic.poo.gol.model.Rule
 import br.unb.cic.poo.gol.model.Originator
 import br.unb.cic.poo.gol.model.CareTaker
+import scala.swing.BorderPanel
 
 object GameView extends scala.swing.MainFrame {
   
@@ -52,8 +53,7 @@ object GameView extends scala.swing.MainFrame {
   val statistics = new Label() {
     horizontalTextPosition = Alignment.Left
     text = Statistics.getRevivedCells + " revived cells " +
-                    Statistics.getKilledCells + " killed cells"
-                    
+                    Statistics.getKilledCells + " killed cells"                 
   }
   
   /****************** RIGHT MENU COMPONENTS ******************/
@@ -108,10 +108,15 @@ object GameView extends scala.swing.MainFrame {
             for (i <- (0 until Main.height)) {
               for (j <- (0 until Main.height)) {
                 contents += cells(i)(j) 
+              }
             }
-          }
+            
         }
-        contents += statistics
+        
+        contents += new BorderPanel {
+          maximumSize = new Dimension(width,30)
+          add( statistics, BorderPanel.Position.West)
+        }
       }
       
       contents += Swing.HStrut(20)
@@ -161,32 +166,38 @@ object GameView extends scala.swing.MainFrame {
     }else{
       makeCellAlive(i, j)
     }
-    statistics.repaint()
   }
   
   private def nextGeneration() {
     GameController.nextGeneration
+    updateStatisticsOnScreen
   }
   
   private def avaliateAutoPlay() {
   }
   
   private def undo(){
-    
     GameController.undo()
+    updateStatisticsOnScreen
   }
   
   private def redo(){
-    
     GameController.redo
+    updateStatisticsOnScreen
   }
   
   private def clear() {
     GameController.clear
+    updateStatisticsOnScreen
   }
   
   private def setRule(){
    GameEngine.setRule(ruleComboBox.selection.index)
+  }
+  
+  private def updateStatisticsOnScreen {
+    statistics.text = Statistics.getRevivedCells + " revived cells " +
+                      Statistics.getKilledCells + " killed cells"
   }
   
   /****************** EXTERNAL FUNCTIONS ****************/
@@ -197,23 +208,4 @@ object GameView extends scala.swing.MainFrame {
       }
     }
   }
-  
-  
-  
-	
-	
-	/*private def autoPlay = {
-    auto = true;
-    try {
-      while(auto){
-        nextGeneration
-        println("Press CTRL-C to stop")
-        Thread.sleep(2000)
-      }
-    } catch {
-      case e : InterruptedException => {
-        auto = false
-      }
-    }
-  }*/
 }
