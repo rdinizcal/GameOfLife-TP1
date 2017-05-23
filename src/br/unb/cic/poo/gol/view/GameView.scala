@@ -17,11 +17,12 @@ import br.unb.cic.poo.gol.model.Statistics
 import scala.swing.Alignment
 import scala.swing.Orientation
 import br.unb.cic.poo.gol.model.Rule
-import br.unb.cic.poo.gol.model.Originator
-import br.unb.cic.poo.gol.model.CareTaker
+import br.unb.cic.poo.gol.model.originator
+import br.unb.cic.poo.gol.model.caretaker
 import scala.swing.BorderPanel
+import javax.swing.SwingWorker
 
-object GameView extends scala.swing.MainFrame {
+object GameView extends scala.swing.MainFrame{
   
 	val width = 640
   val height = 480
@@ -170,19 +171,38 @@ object GameView extends scala.swing.MainFrame {
   
   private def nextGeneration() {
     GameController.nextGeneration
+    GameView.undoButton.enabled_=(true)
     updateStatisticsOnScreen
   }
   
   private def avaliateAutoPlay() {
+    if (!GameEngine.autoplay){
+      GameEngine.autoplay=true
+    }else{
+      GameEngine.autoplay=false
+    }
+    GameEngine.autoPlay
   }
   
   private def undo(){
-    GameController.undo()
+    if (GameController.currentState >=1){
+      GameController.undo
+      GameView.redoButton.enabled_=(true)
+    }else{    
+      GameView.undoButton.enabled_=(false)
+    }
+    
     updateStatisticsOnScreen
   }
   
   private def redo(){
-    GameController.redo
+    if ((GameController.savedStates - 1) > GameController.currentState){
+      GameController.redo
+      GameView.undoButton.enabled_=(true)
+    }else{
+      GameView.redoButton.enabled_=(false)
+    }
+    
     updateStatisticsOnScreen
   }
   

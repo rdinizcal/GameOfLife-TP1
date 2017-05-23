@@ -22,4 +22,9 @@ object Statistics {
 	
   def recordKill = killedCells += 1 
   
+  def clear{
+    revivedCells=0
+    killedCells=0
+  }
+  
 }

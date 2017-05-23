@@ -4,24 +4,25 @@ import scala.collection.mutable.MutableList
 
 import br.unb.cic.poo.gol._
 
-class Originator {
+object originator {
   
   var state: Array[Array[Cell]] = Array.ofDim[Cell](GameEngine.height, GameEngine.width)
-  
+  private var aux: Array[Array[Cell]] = Array.ofDim[Cell](GameEngine.height, GameEngine.width)
   
   def set(newState: Array[Array[Cell]]){
-    println("From Originator: Current Version")
+    println("\nFrom Originator: Current Version\n")
     state = newState
   }
 
-  def store(): Memento={
-    println("From Originator: Saving to Memento")
-    return new Memento(state)
+  def store():Array[Array[Cell]]={
+    println("From Originator: Saving to Memento\n")
+    aux=state
+    return aux
   }
   
-  def restore(m: Memento): Array[Array[Cell]]={
-    state = m.getSavedState
-    println("From Originator: Previous State Saved in Memento")
+  def restore(s: Array[Array[Cell]]): Array[Array[Cell]]={
+    state = aux
+    println("\nFrom Originator: Previous State Saved in Memento\n")
     return state
   }
   

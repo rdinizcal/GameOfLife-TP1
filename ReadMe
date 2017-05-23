@@ -9,6 +9,13 @@ e uma última versão, mais completa, expandindo a abordagem Strategy e seguindo
 gerações com Células nas bordas (Ambiente Infinito), uma interface gráfica (implementada com Swing), injeção de dependência (utilizando o Google Guice), suporte 
 para Undo e Redo (padrão de desenho Memento) e suporte para cálculo automático de próximas gerações.
 
+	Esta última versão, no entanto, contém duas limitações notáveis. A primeira limitação se encontra na funcionalidade de rodar gerações automáticamente. No có-
+digo tem um comentário na função autoPlay da GameEngine explicando que não foi possível implementar um loop para a geração automática. Isso se ocorre pois não 
+trabalhamos com programação concorrente, técnica necessária para atualizar a interface gráfica sem interromper o processamento do cálculo de gerações. A segunda 
+limitação se encontra na funcionalidade de Undo e Redo. Embora toda a framework do padrão de desenho Memento esteja implementada corretamente, algo está fazendo
+com que a cada nova geração salva no Array de matriz do caretaker sobreescreva gerações anteriores. Muito debug foi feito, mas não fomos capazes de entender o 
+motivo.
+
 	Todos os códigos utilizam dependências Maven (Guice e Swing), descritas em pom.xml. Utilizando o Eclipse corretamente configurado para executar projetos 
 Scala, basta rodar o projeto como um projeto Maven e executar a classe Main.scala como uma aplicação Scala.
 

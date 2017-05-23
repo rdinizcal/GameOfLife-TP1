@@ -12,8 +12,8 @@ import br.unb.cic.poo.gol.view.GameView
 import scala.swing.event.ButtonClicked
 import scala.swing.Button
 import scala.swing.AbstractButton
-import br.unb.cic.poo.gol.model.Originator
-import br.unb.cic.poo.gol.model.CareTaker
+import br.unb.cic.poo.gol.model.originator
+import br.unb.cic.poo.gol.model.caretaker
 
 
 
@@ -31,8 +31,6 @@ object GameEngine {
   var cells = Array.ofDim[Cell](height, width)
   
   //variaveis do memento
-  val caretaker = new CareTaker
-  val originator = new Originator
   var savedStates, currentState: Int = 0
   
   for (i <- (0 until height)) {
@@ -83,31 +81,20 @@ object GameEngine {
     caretaker.addState(originator.store())
     savedStates += 1
     currentState += 1
-    print("Saved States: " + savedStates)
-    GameView.undoButton.enabled_=(true)
+    print("\nSaved States: " + savedStates)
   }
   
   def undo(){
     if (currentState >=1){
       currentState -= 1
       cells = originator.restore(caretaker.getState(currentState))
-      GameView.update
-      GameView.redoButton.enabled_=(true)
-    }
-    
-    if(currentState < 1){
-      GameView.undoButton.enabled_=(false)
     }
   }
   
   def redo(){
     if ((savedStates - 1) > currentState){
       currentState+=1
-      cells = originator.restore(caretaker.getState(currentState))
-      GameView.update
-      GameView.undoButton.enabled_=(true)
-    }else{
-      GameView.redoButton.enabled_=(false)
+      cells = originator.restore(caretaker.getState(currentState))   
     }
   }
   /*
@@ -121,6 +108,7 @@ object GameEngine {
         }
       }
     }
+    Statistics.clear
   }
 
   /**
@@ -211,9 +199,16 @@ object GameEngine {
                                       (j >= 0) && (j < GameEngine.width);
   
   /*
-   * Auto Play
+   * Auto Play não completo. Para funcionar é necessário trocar  o if por um while. No entanto, pelo programa nao trabalhar com threads múltiplas, ele entra num loop infinito.
    * */
     def autoPlay{
+      if(autoplay){
+        nextGeneration
+        GameView.update()
+        Thread.sleep(1000)
+        
+        print("\n\nAutoPlay não pode ser executado neste momento (No auxiliar threads)\n\n")
+      }
     }
 
 }

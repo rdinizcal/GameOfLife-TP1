@@ -53,16 +53,22 @@ object GameController {
   
   def nextGeneration {
     GameEngine.nextGeneration
+    currentState = GameEngine.currentState
+    savedStates = GameEngine.savedStates
     GameView.update
   }
   
   def undo() {
     GameEngine.undo
+    currentState = GameEngine.currentState
+    savedStates = GameEngine.savedStates
     GameView.update
   }
   
   def redo() {
     GameEngine.redo
+    currentState = GameEngine.currentState
+    savedStates = GameEngine.savedStates
     GameView.update
   }
   
