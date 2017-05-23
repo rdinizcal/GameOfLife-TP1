@@ -8,6 +8,9 @@ import br.unb.cic.poo.gol.view.GameView
  * Relaciona o componente View com o componente Model. 
  */
 object GameController {
+  
+  var currentState = GameEngine.currentState
+  var savedStates = GameEngine.savedStates
 
   def makeCellAlive(i: Int, j: Int) {
     try {
@@ -50,6 +53,16 @@ object GameController {
   
   def nextGeneration {
     GameEngine.nextGeneration
+    GameView.update
+  }
+  
+  def undo() {
+    GameEngine.undo
+    GameView.update
+  }
+  
+  def redo() {
+    GameEngine.redo
     GameView.update
   }
   

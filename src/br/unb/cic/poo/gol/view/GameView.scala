@@ -17,12 +17,15 @@ import br.unb.cic.poo.gol.model.Statistics
 import scala.swing.Alignment
 import scala.swing.Orientation
 import br.unb.cic.poo.gol.model.Rule
-import br.unb.cic.poo.gol.AutoPlay
+import br.unb.cic.poo.gol.model.Originator
+import br.unb.cic.poo.gol.model.CareTaker
 
 object GameView extends scala.swing.MainFrame {
   
 	val width = 640
   val height = 480
+  
+  
   
   title = "Game of Life"
   preferredSize = new Dimension(width,height)
@@ -64,7 +67,6 @@ object GameView extends scala.swing.MainFrame {
       case ButtonClicked(autoPlayButton) => avaliateAutoPlay()  
     }  
   }
-  
   val clearButton = new Button("    Clear      "){
     reactions += {
       case ButtonClicked(clearButton) => clear()
@@ -75,6 +77,14 @@ object GameView extends scala.swing.MainFrame {
       case ButtonClicked(undoButton) => undo()
     }
   }
+  val redoButton = new Button("     Redo     ") {
+    reactions += {
+      case ButtonClicked(redoButton) => redo()
+    }
+  }
+  
+  undoButton.enabled_=(false)
+  redoButton.enabled_=(false)
   
   /****************** SCREEN CONTENTS ******************/
   contents = new BoxPanel(Orientation.Vertical){
@@ -116,6 +126,8 @@ object GameView extends scala.swing.MainFrame {
         contents += Swing.VStrut(10)
         contents += undoButton
         contents += Swing.VStrut(10)
+        contents += redoButton
+        contents += Swing.VStrut(10)
         
         maximumSize = new Dimension(120, height)
       }
@@ -154,19 +166,20 @@ object GameView extends scala.swing.MainFrame {
   
   private def nextGeneration() {
     GameController.nextGeneration
-    
   }
   
   private def avaliateAutoPlay() {
-    if(AutoPlay.auto){
-      AutoPlay.stop
-    }else{
-      AutoPlay.play
-    }
-    GameEngine.autoPlay
   }
   
-  private def undo(){}
+  private def undo(){
+    
+    GameController.undo()
+  }
+  
+  private def redo(){
+    
+    GameController.redo
+  }
   
   private def clear() {
     GameController.clear

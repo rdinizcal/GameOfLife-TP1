@@ -12,6 +12,8 @@ import br.unb.cic.poo.gol.view.GameView
 import scala.swing.event.ButtonClicked
 import scala.swing.Button
 import scala.swing.AbstractButton
+import br.unb.cic.poo.gol.model.Originator
+import br.unb.cic.poo.gol.model.CareTaker
 
 
 
@@ -24,7 +26,12 @@ object GameEngine {
   val height = Main.height
   val width = Main.width
 
-  val cells = Array.ofDim[Cell](height, width)
+  var cells = Array.ofDim[Cell](height, width)
+  
+  //variaveis do memento
+  val caretaker = new CareTaker
+  val originator = new Originator
+  var savedStates, currentState: Int = 0
   
   for (i <- (0 until height)) {
     for (j <- (0 until width)) {
@@ -63,7 +70,37 @@ object GameEngine {
       cell.kill
       Statistics.recordKill
     }
+    
+    originator.set(cells)
+    caretaker.addState(originator.store())
+    savedStates += 1
+    currentState += 1
+    print("Saved States: " + savedStates)
+    GameView.undoButton.enabled_=(true)
+    
 
+  }
+  
+  def undo(){
+    if (currentState >=1){
+      currentState -= 1
+      cells = originator.restore(caretaker.getState(currentState))
+      GameView.update
+      GameView.redoButton.enabled_=(true)
+    }else{
+      GameView.undoButton.enabled_=(false)
+    }
+  }
+  
+  def redo(){
+    if ((savedStates - 1) > currentState){
+      currentState+=1
+      cells = originator.restore(caretaker.getState(currentState))
+      GameView.update
+      GameView.undoButton.enabled_=(true)
+    }else{
+      GameView.redoButton.enabled_=(false)
+    }
   }
   /*
    * Limpa o board
