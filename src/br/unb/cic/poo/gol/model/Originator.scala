@@ -10,18 +10,18 @@ class Originator {
   
   
   def set(newState: Array[Array[Cell]]){
-    print("From Originator: Current Version\n\n\n")
-    state=newState
+    println("From Originator: Current Version")
+    state = newState
   }
 
   def store(): Memento={
-    print ("From Originator: Saving to Memento")
+    println("From Originator: Saving to Memento")
     return new Memento(state)
   }
   
   def restore(m: Memento): Array[Array[Cell]]={
-    state=m.getSavedState
-    print ("From Originator: Previous State Saved in Memento\n\n\n")
+    state = m.getSavedState
+    println("From Originator: Previous State Saved in Memento")
     return state
   }
   

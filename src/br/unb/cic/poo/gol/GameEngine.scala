@@ -49,10 +49,12 @@ object GameEngine {
    *  Calcula uma nova geracao do ambiente
    */
   def nextGeneration {
-
+    
     val mustRevive = new ListBuffer[Cell]
     val mustKill = new ListBuffer[Cell]
 
+     saveState
+    
     for (i <- (0 until height)) {
       for (j <- (0 until width)) {
         if (rule.shouldRevive(i, j)) {
@@ -73,14 +75,16 @@ object GameEngine {
       Statistics.recordKill
     }
     
+
+  }
+  
+  def saveState{
     originator.set(cells)
     caretaker.addState(originator.store())
     savedStates += 1
     currentState += 1
     print("Saved States: " + savedStates)
     GameView.undoButton.enabled_=(true)
-    
-
   }
   
   def undo(){
@@ -89,7 +93,9 @@ object GameEngine {
       cells = originator.restore(caretaker.getState(currentState))
       GameView.update
       GameView.redoButton.enabled_=(true)
-    }else{
+    }
+    
+    if(currentState < 1){
       GameView.undoButton.enabled_=(false)
     }
   }

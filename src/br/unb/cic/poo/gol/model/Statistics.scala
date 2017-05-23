@@ -12,19 +12,13 @@ object Statistics {
 	private var killedCells = 0
   
 	
-	def getRevivedCells : Int={
-    print(revivedCells)
-    revivedCells
-  }
+	def getRevivedCells : Int = revivedCells
 
 	def recordRevive = revivedCells += 1
 	
 	def removeRevive = revivedCells -= 1
 
-  def getKilledCells: Int = {
-	  print(killedCells)
-	  killedCells
-	}
+  def getKilledCells: Int = killedCells
 	
   def recordKill = killedCells += 1 
   

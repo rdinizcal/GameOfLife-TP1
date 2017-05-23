@@ -203,7 +203,7 @@ object GameView extends scala.swing.MainFrame {
   /****************** EXTERNAL FUNCTIONS ****************/
   def update(){
     for (i <- (0 until Main.height)) {
-      for (j <- (0 until Main.height)) {
+      for (j <- (0 until Main.width)) {
         cells(i)(j).background = if (GameEngine.isCellAlive(i, j)) Color.BLUE else Color.LIGHT_GRAY 
       }
     }
